@@ -70,10 +70,10 @@ void Draw()
             else
             {
                 if(mapa[y][x]==w) {
-                    SetConsoleTextAttribute(hConsole, 2);
+                    SetConsoleTextAttribute(hConsole, 15);
                 }
                 else if(mapa[y][x]==f) {
-                    SetConsoleTextAttribute(hConsole, 12);
+                    SetConsoleTextAttribute(hConsole, 14);
                 }
 
                 cout<<mapa[y][x];
@@ -116,21 +116,44 @@ void Input()
     }
 
 }
+int colisao(int x, int y, int result)
+{
+	if (mapa[y][x] == 219 || mapa[y][x] == 32 || mapa[y][x] == 46)
+	{
+		result = 0;
+	}
+	else
+	{
+		result = 1;
+	}
+
+
+	return result;
+}
+
 void Logic()
 {
     //Verificar comidinhas e direção
-    switch (dir) {
-    case LEFT:
-        pacX--;
+	switch (dir) {
+	case LEFT:
+		if (!colisao(pacX - 1, pacY, 0)){
+			pacX--;
+	}
         break;
     case RIGHT:
-        pacX++;
+		if (!colisao(pacX + 1, pacY, 0)){
+			pacX++;
+		}
         break;
     case UP:
-        pacY--;
+		if (!colisao(pacX, pacY - 1, 0)){
+			pacY--;
+		}
         break;
     case DOWN:
-        pacY++;
+		if (!colisao(pacX, pacY + 1, 0)){
+			pacY++;
+		}
         break;
     case STOP:
         break;
@@ -138,13 +161,21 @@ void Logic()
 }
 int main()
 {
+	int colisor = 0;
     Setup();
     while(!gameOver)
     {
         Draw();
         Input();
         Logic();
-        Sleep(500);
+        
+		colisor = colisao(pacX, pacY, 0);
+
+
+		cout << "Colisao: " << colisor << '\n';
+
+		cout << "X: " << pacX << "Y: " << pacY << '\n';
+		Sleep(100);
     }
     return 0;
 }
